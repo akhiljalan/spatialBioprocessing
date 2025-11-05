@@ -13,12 +13,14 @@ def save_results_to_csv(simulator, filepath: str) -> None:
         writer = csv.writer(csvfile)
         writer.writerow(fieldnames)
 
+        # print(len(simulator.biomass_time_series))
+        # print(simulator.concentrations_time_series)
         for t, biomass in enumerate(simulator.biomass_time_series):
             time_s = t * simulator.dt
             row = [time_s, biomass]
 
-            for met, idx in simulator.concentrations_index_dict.items():
-                total_conc = simulator.concentrations[..., idx].sum()
+            for met in simulator.concentrations_index_dict.keys():
+                total_conc = simulator.concentrations_time_series[met][t]
                 row.append(total_conc)
 
             writer.writerow(row)
@@ -62,7 +64,7 @@ def plot_results_to_pdf_grid(filepath: str, pdf_path: str = "results_grid.pdf",
         axes[idx].plot(time, df[comp], label=comp, linewidth=2)
         axes[idx].set_title(comp)
         axes[idx].set_xlabel('Time (hr)')
-        axes[idx].set_ylabel('Total Amount (mM)' if comp != 'biomass_total' else 'Biomass (gDW)')
+        axes[idx].set_ylabel('Total Amount (mmol)' if comp != 'biomass_total' else 'Biomass (gDW)')
         axes[idx].grid(True)
 
     # Turn off unused subplots if any

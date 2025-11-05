@@ -6,7 +6,6 @@ from cobra.util.array import create_stoichiometric_matrix, constraint_matrices
 import gurobipy as gp
 import time
 from time import strftime, localtime 
-import logging 
 from typing import Dict, List, Optional
 '''
 Simulates fluid advection from a steady-state velocity vield, 
@@ -92,7 +91,6 @@ class SpatialSimulator:
 
         # Set metabolites to track 
         self.met_subset = met_subset 
-        self.logger = logger.getLogger(__name__)
         
     def _init_concentrations_index_dict(self) -> Dict[str, int]: 
         '''
@@ -129,9 +127,11 @@ class SpatialSimulator:
 
         # Keep track of total biomass for easy reporting later. 
         self.biomass_time_series = []
+        self.concentrations_time_series = {}
 
         for m in self.ext_conc: 
             metabolite_idx = self.concentrations_index_dict[m]
+            self.concentrations_time_series[m] = []
             self.concentrations[:, :, :, metabolite_idx] = self.ext_conc[m] * np.ones(
                 shape=(self.nx, self.ny, self.nz)
             )
@@ -460,9 +460,8 @@ class SpatialSimulator:
 
         print(f'Beginning {num_timesteps} step run at {start_time_str}')
         print_every = int(num_timesteps / 10)
-        total_biomass = self.biomass_grid.sum()
-        self.biomass_time_series.append(total_biomass)
-        # print_every = 100 
+        self._update_concentrations_trackers()
+        
         for t in range(num_timesteps): 
             self.step(timestep=t)
             if t < 20 and self.verbose in ['debug']: 
@@ -475,11 +474,11 @@ class SpatialSimulator:
                         print(f"{rxn}: mean flux = {np.mean(self.fluxes[idx, :]):.4f} mmol/gDW/h")
                         print(f"{rxn}: min flux = {np.min(self.fluxes[idx, :]):.4f} mmol/gDW/h")
                         print(f"{rxn}: max flux = {np.max(self.fluxes[idx, :]):.4f} mmol/gDW/h")
-            elif t % print_every == 0 and self.verbose in ['debug', 'minimal']: 
-                print('\n' + '-' * 100)
-                print(f'Step {t} done.')
-                total_biomass = self.biomass_grid.sum()
-                self.biomass_time_series.append(total_biomass)
+            elif t % print_every == 0 and self.verbose in ['none,' 'debug', 'minimal']: 
+                if self.verbose != 'none': 
+                    print('\n' + '-' * 100)
+                    print(f'Step {t} done.')
+                self._update_concentrations_trackers()
                 if self.verbose == 'debug': 
                     for rxn in sample_rxns:
                         idx = self.reaction_id_to_idx.get(rxn)
@@ -503,6 +502,18 @@ class SpatialSimulator:
         self.report_total_masses(metabolites = self.met_subset)
 
 
+    def _update_concentrations_trackers(self) -> None: 
+        '''
+        Updates time series trackers for biomass and 
+        metabolite concentrations. 
+        '''
+        total_biomass = self.biomass_grid.sum()
+        self.biomass_time_series.append(total_biomass)
+        for m in self.ext_conc: 
+            metabolite_idx = self.concentrations_index_dict[m]
+            self.concentrations_time_series[m].append(
+                self.concentrations[..., metabolite_idx].sum()
+            )
     def report_total_masses(self, metabolites: list[str]) -> None:
         '''
         Prints total mass (across all voxels) for given metabolites 

@@ -6,7 +6,8 @@ from cobra.util.array import create_stoichiometric_matrix, constraint_matrices
 import gurobipy as gp
 import time
 from time import strftime, localtime 
-
+import logging 
+from typing import Dict, List, Optional
 '''
 Simulates fluid advection from a steady-state velocity vield, 
 and biomass growth via dynamic Flux Balance Analysis (FBA). 
@@ -91,6 +92,7 @@ class SpatialSimulator:
 
         # Set metabolites to track 
         self.met_subset = met_subset 
+        self.logger = logger.getLogger(__name__)
         
     def _init_concentrations_index_dict(self) -> Dict[str, int]: 
         '''
@@ -549,7 +551,7 @@ class SpatialSimulator:
         while not field_found: 
             v = np.random.normal(size=(nx, ny, nz, 3))
             v /= np.linalg.norm(v, axis=-1, keepdims=True)  # per-point init only; ok
-            avg_divergence = np.abs(np.mean(SpatialFBASimulator.compute_divergence(v)))
+            avg_divergence = np.abs(np.mean(SpatialSimulator.compute_divergence(v)))
             if avg_divergence < best_div: 
                 best_div = avg_divergence 
                 best_field = v 

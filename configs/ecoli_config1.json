@@ -1,0 +1,34 @@
+{
+    "ext_conc": {
+        "glc__D_e": 11.101,
+        "o2_e": 0.063,
+        "nh4_e": 18.695,
+        "pi_e": 64.310,
+        "h_e": 3.98e-5,
+        "h2o_e": 55500.0,
+        "co2_e": 0.0
+    },
+    "setpoints": {
+        "h2o_e": 55500.0,
+        "o2_e": 0.063
+    },
+    "vmax_params": {
+        "EX_glc__D_e": 10.0,
+        "EX_o2_e": 20.0
+    },
+    "km_params": {
+        "EX_glc__D_e": 0.05,
+        "EX_o2_e": 0.1
+    },
+    "kn_params": {
+        "EX_lac__D_e": 5.0,
+        "EX_ac_e": 5.0
+    },
+    "model_name": "textbook", 
+    "dt": 10.0, 
+    "volume": 64.0,
+    "biomass_init": 2.0, 
+    "nx": 4, 
+    "ny": 4, 
+    "nz": 4
+}

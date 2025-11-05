@@ -76,9 +76,9 @@ To create a different simulation, simply create a config
 
 ### Difference between this repository and dynamicFBA
 
-The metabolic modeling in this repository is substantially similar to my ![dynamicFBA](https://github.com/akhiljalan/dynamicFBA) code. However, due to the need to handle parallelism between FBA instances at different voxel sites, we use a different solver and problem setup here, so the implementation here cannot cleanly extend the code there. 
+The metabolic modeling in this repository is substantially similar to my [dynamicFBA](https://github.com/akhiljalan/dynamicFBA) code. However, due to the need to handle parallelism between FBA instances at different voxel sites, we use a different solver and problem setup here, so the implementation here cannot cleanly extend the code there. 
 
-For users not interested in spatial variability, we would recommend using ![dynamicFBA](https://github.com/akhiljalan/dynamicFBA) as a lighter and faster FBA method. 
+For users not interested in spatial variability, we would recommend using [dynamicFBA](https://github.com/akhiljalan/dynamicFBA) as a lighter and faster FBA method. 
 
 ### Future work 
 

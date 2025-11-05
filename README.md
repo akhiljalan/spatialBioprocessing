@@ -1,5 +1,4 @@
 # Spatial Bioprocessing
-Coupled simulation of fluid transport and cell dynamics in bioprocessing.
 
 This repository contains an implementation of **Spatially Varying Bioprocess Simulation**. Specifically, it combines *fluid advection* according to a pre-specified velocity field with *biomass growth and metabolite consumption* due to a mechanistic model. We explicitly handle: 
 - Spatial advection via semi-Lagrangian methods
@@ -95,4 +94,4 @@ There are many promising extensions to this model. Some interesting ones include
 - Build a *bioprocess optimization* layer that leverages e.g. Bayesian Optimization to design optimal media and bioprocess conditions. 
 - Use adaptive mesh refinment in the time domain to save compute costs by not solving a full dynamic FBA instance at each timestep. In other words, advect at a much finer time resolution than flux balancing. 
 
-[^1] If your cell line is not available on BiGG, you can also load custom metabolic models via an SBML or XML file. However, to use this code you'll need to ensure consistency with COBRA model formats such as `_e` suffices for exchange reactions, as well as refactoring a bit. If you're interested in refactoring the codebase to support custom metabolic models, please file an issue or email me! 
+[^1]: If your cell line is not available on BiGG, you can also load custom metabolic models via an SBML or XML file. However, to use this code you'll need to ensure consistency with COBRA model formats such as `_e` suffices for exchange reactions, as well as refactoring a bit. If you're interested in refactoring the codebase to support custom metabolic models, please file an issue or email me! 

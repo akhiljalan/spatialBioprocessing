@@ -68,9 +68,17 @@ After running the demo script, results are saved to the `demos/spatial_ecoli1/` 
 
 ![image](figs/results_grid_spatial_ecoli1.jpg)
 
-### Running for your cell line 
+### Running for your cell line, simply create a fresh config file and copy over the code from the 
 
-To create a different simulation, simply create a config 
+To create a different simulation, simply create a fresh config file and copy over the code from `demos/demo_spatial_ecoli1.py`. Any COBRApy model is supported. You can view available models at [BiGG](http://bigg.ucsd.edu). 
+
+For example, you might use the *Saccharomyces cerevisiae S288C* model (see the [BiGG page](http://bigg.ucsd.edu/models/iMM904) for details). 
+
+```your_config.json
+"model_name": "iMM904"
+```
+
+Beyond changing the cell line, you'll want to ensure that the exchange reactions and metabolites you're tracking are actually present in the model. Within the `SpatialSimulator` object, be sure to specify `met_subset`, 
 
 ## Discussion 
 

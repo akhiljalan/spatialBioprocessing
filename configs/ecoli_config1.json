@@ -26,8 +26,8 @@
     },
     "model_name": "textbook", 
     "dt": 10.0, 
-    "volume": 64.0,
-    "biomass_init": 2.0, 
+    "volume": 20.0,
+    "biomass_init": 10.0, 
     "nx": 4, 
     "ny": 4, 
     "nz": 4

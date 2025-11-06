@@ -25,7 +25,6 @@ class SpatialSimulator:
         metabolites_to_track: list[str], 
         dt_fast: float = 0.01, # seconds 
         volume_total: float = None, # Liters 
-        initial_biomass: float = None, # gDW, per voxel 
         initial_biomass_total: float = None, # gDW
         ext_conc: dict = None, 
         setpoints: Optional[Dict[str, float]] = None, # Metabolite ID -> External concentration (mM)
@@ -54,7 +53,6 @@ class SpatialSimulator:
         print(f'{self.voxel_volume=}')
         self.initial_biomass_total = initial_biomass_total
         
-        self.initial_biomass = initial_biomass
         self.ext_conc = ext_conc
         self.solver = solver
 
@@ -128,6 +126,8 @@ class SpatialSimulator:
         # Keep track of total biomass for easy reporting later. 
         self.biomass_time_series = []
         self.concentrations_time_series = {}
+        # Track the amount of simulation time elapsed 
+        self.time_values_series = []
 
         for m in self.ext_conc: 
             metabolite_idx = self.concentrations_index_dict[m]
@@ -460,7 +460,7 @@ class SpatialSimulator:
 
         print(f'Beginning {num_timesteps} step run at {start_time_str}')
         print_every = int(num_timesteps / 10)
-        self._update_concentrations_trackers()
+        self._update_concentrations_trackers(timestep = 0)
         
         for t in range(num_timesteps): 
             self.step(timestep=t)
@@ -478,7 +478,7 @@ class SpatialSimulator:
                 if self.verbose != 'none': 
                     print('\n' + '-' * 100)
                     print(f'Step {t} done.')
-                self._update_concentrations_trackers()
+                self._update_concentrations_trackers(timestep = t)
                 if self.verbose == 'debug': 
                     for rxn in sample_rxns:
                         idx = self.reaction_id_to_idx.get(rxn)
@@ -502,11 +502,13 @@ class SpatialSimulator:
         self.report_total_masses(metabolites = self.met_subset)
 
 
-    def _update_concentrations_trackers(self) -> None: 
+    def _update_concentrations_trackers(self, timestep: int = 0) -> None: 
         '''
         Updates time series trackers for biomass and 
         metabolite concentrations. 
         '''
+        cur_time_seconds = self.dt * timestep 
+        self.time_values_series.append(cur_time_seconds)
         total_biomass = self.biomass_grid.sum()
         self.biomass_time_series.append(total_biomass)
         for m in self.ext_conc: 

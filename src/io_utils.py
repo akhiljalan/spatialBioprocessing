@@ -15,12 +15,12 @@ def save_results_to_csv(simulator, filepath: str) -> None:
 
         # print(len(simulator.biomass_time_series))
         # print(simulator.concentrations_time_series)
-        for t, biomass in enumerate(simulator.biomass_time_series):
-            time_s = t * simulator.dt
+        for idx, biomass in enumerate(simulator.biomass_time_series):
+            time_s = simulator.time_values_series[idx]
             row = [time_s, biomass]
 
             for met in simulator.concentrations_index_dict.keys():
-                total_conc = simulator.concentrations_time_series[met][t]
+                total_conc = simulator.concentrations_time_series[met][idx]
                 row.append(total_conc)
 
             writer.writerow(row)

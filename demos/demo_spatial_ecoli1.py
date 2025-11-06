@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
 
 
-    n_hours = 0.5
+    n_hours = 4.0
     dt_seconds = sim.dt
     n_steps = int(3600.0 * n_hours / dt_seconds)
 
